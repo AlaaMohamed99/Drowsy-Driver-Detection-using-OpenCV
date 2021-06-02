@@ -30,13 +30,13 @@ def sound_alarm(path):
 	playsound.playsound(path)
 
 
-def detect():
-	detector = dlib.get_frontal_face_detector()
+# def detect():
+# 	detector = dlib.get_frontal_face_detector()
 
-	return detector
-def predict():
-		predictor = dlib.shape_predictor('shape_predictor.dat')
-		return predictor
+# 	return detector
+# def predict():
+# 		predictor = dlib.shape_predictor('shape_predictor.dat')
+# 		return predictor
 
 
 
@@ -95,7 +95,7 @@ while True:
 	
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	# detect faces in the grayscale frame
-	detector=detect()
+	detector = dlib.get_frontal_face_detector()
 	rects = detector(gray, 0)
 	faces = face_cascade.detectMultiScale(
         gray,
@@ -111,7 +111,7 @@ while True:
 		# determine the facial landmarks for the face region, then
 		# convert the facial landmark (x, y)-coordinates to a NumPy
 		# array
-		predictor=predict()
+		predictor = dlib.shape_predictor('shape_predictor.dat')
 		shape = predictor(gray, rect)
 		shape = face_utils.shape_to_np(shape)
 		
@@ -129,7 +129,7 @@ while True:
 		rightEyeHull = cv2.convexHull(rightEye)
 		cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
 		cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
-		drowsy_detect(ear,frame,0)
+		#qqqqqdrowsy_detect(ear,frame,0)
 		# if ear < EYE_AR_THRESH:
 		# 	frame_counter += 1
 		# 	if frame_counter >= EYE_AR_CONSEC_FRAMES:
@@ -154,15 +154,15 @@ while True:
 
 
 	key = cv2.waitKey(1) & 0xFF
+
 	if key == ord("q"):
 		break
 # do a bit of cleanup
 
 
 
-if __name__ == "__main__":
- cv2.destroyAllWindows()
- vs.stop()
+cv2.destroyAllWindows()
+vs.stop()
 			
 
  
