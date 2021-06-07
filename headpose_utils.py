@@ -5,6 +5,8 @@ import cv2
 ################ yarab mansash implement functions lel visualization############################
 
 # 1- calibrate camera to get focal length
+# 2-try γ=0
+# 3-make visualization
 
 def FaceModel_3D_Matrix():
 #[x y z 1] 3d model of face  (World Coordinates)  
@@ -21,16 +23,16 @@ def FaceModel_3D_Matrix():
     
     return modelpoints
 
-def Imagepoints_2D_Matrix(shape):
+def Imagepoints_2D_Matrix(landmarks):
 #s[u v t] 2d image taken by camera
 #  get from the 68 facial landmarks from predictor(shape)
 
-    imagePoints_2D = [[shape.part(30).x, shape.part(30).y],
-                   [shape.part(8).x, shape.part(8).y],
-                   [shape.part(36).x, shape.part(36).y],
-                   [shape.part(45).x, shape.part(45).y],
-                   [shape.part(48).x, shape.part(48).y],
-                   [shape.part(54).x, shape.part(54).y]]
+    imagePoints_2D = [[landmarks.part(30).x, landmarks.part(30).y],
+                   [landmarks.part(8).x, landmarks.part(8).y],
+                   [landmarks.part(36).x, landmarks.part(36).y],
+                   [landmarks.part(45).x, landmarks.part(45).y],
+                   [landmarks.part(48).x, landmarks.part(48).y],
+                   [landmarks.part(54).x, landmarks.part(54).y]]
     
     imagePoints = np.array(imagePoints_2D, dtype=np.float64)
     return imagePoints     
@@ -66,7 +68,7 @@ def getimageshape(image):
 def CalcEulerAngles(RotationVector):
 # calculating angle
 
-    RotationMatrix = cv2.Rodrigues(RotationVector) #lazm ageebha matrix msh vector 
+    RotationMatrix,jac = cv2.Rodrigues(RotationVector) #lazm ageebha matrix msh vector 
     three_angles= cv2.RQDecomp3x3(RotationMatrix)
 
     return three_angles
