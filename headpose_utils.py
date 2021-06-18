@@ -7,6 +7,46 @@ import cv2
 # 1- calibrate camera to get focal length
 # 2-try γ=0
 # 3-make visualization
+# 4-lwindow msh bt2fl hata lw dost q (done)
+# 5-check Euler angle
+# 6-momken a deetct face wahed bs msh koloo(driver)
+
+def HeadPoseAngles(marks,image,frame_counter_head):
+    
+        distortion_coeff = np.zeros((4,1))
+        h,w,c = getimageshape(image)
+        imagePoints_2d = Imagepoints_2D_Matrix(marks)
+        cameraMatrix =CameraMatrix(w, (h/2,w/2))
+        successmsg , rotationVector , translationVector = SolvePnp(FaceModel_3D_Matrix(),
+                    imagePoints_2d , cameraMatrix,distortion_coeff)
+        
+        # angles = headpose.CalcEulerAngles(rotationVector) #btl3 warning w error m3 enha zay lta7t bzbt
+        rmat, jac = cv2.Rodrigues(rotationVector)
+        angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+        max_no_of_frames = 35
+        alarm = False
+  
+        if angles[1] < -10:
+            frame_counter_head += 1
+            if frame_counter_head >= max_no_of_frames:
+                if not alarm:
+                    alarm = True
+                    GAZE = "Please Look Forward"
+            
+        elif angles[1] > 25:
+            frame_counter_head += 1
+            if frame_counter_head >= max_no_of_frames:
+                if not alarm:
+                    alarm = True            
+                    GAZE = "Please Look Forward"
+                    
+        
+        else:
+            frame_counter_head = 0        
+            GAZE = "............ "
+            alarm = False
+            
+        return angles , alarm , frame_counter_head
 
 def FaceModel_3D_Matrix():
 #[x y z 1] 3d model of face  (World Coordinates)  
@@ -69,6 +109,6 @@ def CalcEulerAngles(RotationVector):
 # calculating angle
 
     RotationMatrix,jac = cv2.Rodrigues(RotationVector) #lazm ageebha matrix msh vector 
-    three_angles= cv2.RQDecomp3x3(RotationMatrix)
+    three_angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(RotationMatrix)
 
     return three_angles

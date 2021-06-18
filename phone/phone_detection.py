@@ -44,7 +44,7 @@ def detect (frame,infer): #infer model instance
     fps = 1.0 / (time.time() - start_time)
     print("FPS: %.2f" % fps)
     result = np.asarray(image)
-    cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
+    # cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
     result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     return result, phone_found
