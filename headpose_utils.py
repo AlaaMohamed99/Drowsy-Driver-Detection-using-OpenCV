@@ -23,7 +23,7 @@ def HeadPoseAngles(marks,image,frame_counter_head):
         # angles = headpose.CalcEulerAngles(rotationVector) #btl3 warning w error m3 enha zay lta7t bzbt
         rmat, jac = cv2.Rodrigues(rotationVector)
         angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
-        max_no_of_frames = 45
+        max_no_of_frames = 35
         alarm = False
   
         if angles[1] < -10:
