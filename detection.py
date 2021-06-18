@@ -102,8 +102,9 @@ while True:
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(30, 30),
-        #flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+      
     )
+    # draw rectangle around the face
 	for (x, y, w, h) in faces:
 		cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
@@ -129,6 +130,8 @@ while True:
 		rightEyeHull = cv2.convexHull(rightEye)
 		cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
 		cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
+
+        #Alarm#
 		#qqqqqdrowsy_detect(ear,frame,0)
 		# if ear < EYE_AR_THRESH:
 		# 	frame_counter += 1
@@ -152,9 +155,9 @@ while True:
 	
 	cv2.imshow('frame',frame)
 
-
+     
 	key = cv2.waitKey(1) & 0xFF
-
+#To quit and exit
 	if key == ord("q"):
 		break
 # do a bit of cleanup
@@ -163,6 +166,4 @@ while True:
 
 cv2.destroyAllWindows()
 vs.stop()
-			
-
- 
+	
