@@ -2,38 +2,32 @@ import numpy as np
 # import dlib
 import cv2
 
-################ yarab mansash implement functions lel visualization############################
-
-# 1- calibrate camera to get focal length
-# 2-try γ=0
-# 3-make visualization
-# 4-lwindow msh bt2fl hata lw dost q (done)
-# 5-check Euler angle
-# 6-momken a deetct face wahed bs msh koloo(driver)
 
 def HeadPoseAngles(marks,image,frame_counter_head):
-    
-        distortion_coeff = np.zeros((4,1))
+        #marks : 68 facial landmarks 
+        #frame_counter_head : counter for num of frames to detect if the driver looked away to turn alarm on
+        distortion_coeff = np.zeros((4,1)) #no camera length distortion
         h,w,c = getimageshape(image)
         imagePoints_2d = Imagepoints_2D_Matrix(marks)
         cameraMatrix =CameraMatrix(w, (h/2,w/2))
+        #head pose estimation using solvepnp using iterative algorithm
+        #estimate the orientation(projection) of a 3D object in a 2D image
         successmsg , rotationVector , translationVector = SolvePnp(FaceModel_3D_Matrix(),
                     imagePoints_2d , cameraMatrix,distortion_coeff)
         
-        # angles = headpose.CalcEulerAngles(rotationVector) #btl3 warning w error m3 enha zay lta7t bzbt
-        rmat, jac = cv2.Rodrigues(rotationVector)
+        rmat, jac = cv2.Rodrigues(rotationVector) #must change from vector to matrix
         angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
-        max_no_of_frames = 35
+        max_no_of_frames = 35 #num of frames to detect if the driver looked away to turn alarm on
         alarm = False
   
-        if angles[1] < -10:
+        if angles[1] < -10: #looking left
             frame_counter_head += 1
             if frame_counter_head >= max_no_of_frames:
                 if not alarm:
                     alarm = True
                     GAZE = "Please Look Forward"
             
-        elif angles[1] > 25:
+        elif angles[1] > 25: #looking right
             frame_counter_head += 1
             if frame_counter_head >= max_no_of_frames:
                 if not alarm:
@@ -50,7 +44,7 @@ def HeadPoseAngles(marks,image,frame_counter_head):
 
 def FaceModel_3D_Matrix():
 #[x y z 1] 3d model of face  (World Coordinates)  
-
+#3D location of the 2D feature image points
     modelPoints_3D = [[0.0, 0.0, 0.0], # Nose tip
                    [0.0, -330.0, -65.0],# Chin
                    [-225.0, 170.0, -135.0],# Left eye left corner
@@ -65,14 +59,14 @@ def FaceModel_3D_Matrix():
 
 def Imagepoints_2D_Matrix(landmarks):
 #s[u v t] 2d image taken by camera
-#  get from the 68 facial landmarks from predictor(shape)
+#  get from the 68 facial landmarks from predictor (from dlib library )(shape) the x,y coordinates for some landmarks
 
-    imagePoints_2D = [[landmarks.part(30).x, landmarks.part(30).y],
-                   [landmarks.part(8).x, landmarks.part(8).y],
-                   [landmarks.part(36).x, landmarks.part(36).y],
-                   [landmarks.part(45).x, landmarks.part(45).y],
-                   [landmarks.part(48).x, landmarks.part(48).y],
-                   [landmarks.part(54).x, landmarks.part(54).y]]
+    imagePoints_2D = [[landmarks.part(30).x, landmarks.part(30).y], #Nose Tip
+                   [landmarks.part(8).x, landmarks.part(8).y], #Chin
+                   [landmarks.part(36).x, landmarks.part(36).y], #Left corner of the left eye
+                   [landmarks.part(45).x, landmarks.part(45).y], #Right corner of the right eye
+                   [landmarks.part(48).x, landmarks.part(48).y], #Left corner of the mouth
+                   [landmarks.part(54).x, landmarks.part(54).y]] #Right corner of the mouth
     
     imagePoints = np.array(imagePoints_2D, dtype=np.float64)
     return imagePoints     
@@ -81,7 +75,7 @@ def CameraMatrix(focal_l, center):
     #[[fx, γ , u0],     f(x, y) elfocal lenthgs bt3 lcamera , (u0,v0) elcenter of 2d image
     # [0, fy, v0,
     # [0, 0, 1]]
-    
+    #calibrating camera    
     cameraMatrix = [[focal_l, 1, center[0]],
                     [0, focal_l, center[1]],
                     [0, 0, 1]]
@@ -96,14 +90,11 @@ def SolvePnp(facemodel_3D, imagePoints_2d, cameraMatrix, distortion_coeff):
     return successmsg , rotationVector , translationVector
 
 def getimageshape(image):
-    
+        #get the h,w,c of image
     height, width, channels = image.shape
     
     return height , width , channels
 
-# def GetCameraFocalLength(width):
-#     focalLength = width    
-#     return focalLength
 
 def CalcEulerAngles(RotationVector):
 # calculating angle
