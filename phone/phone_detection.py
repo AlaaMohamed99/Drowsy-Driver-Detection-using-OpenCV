@@ -40,11 +40,11 @@ def detect (frame,infer): #infer model instance
             phone_found = True
 
     pred_bbox = [boxes.numpy(), scores.numpy(), classes.numpy(), valid_detections.numpy()]
-    image = draw_bbox(frame, pred_bbox)
+    # image = draw_bbox(frame, pred_bbox)
     #fps = 1.0 / (time.time() - start_time)
     #print("FPS: %.2f" % fps)
     result = np.asarray(image)
-    cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
+    # cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
     result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     return result, phone_found
