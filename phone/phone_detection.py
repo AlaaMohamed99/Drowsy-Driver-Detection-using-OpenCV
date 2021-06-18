@@ -17,7 +17,7 @@ def detect (frame,infer): #infer model instance
     image_data = cv2.resize(frame, (416, 416))
     image_data = image_data / 255.
     image_data = image_data[np.newaxis, ...].astype(np.float32)
-    start_time = time.time()
+    #start_time = time.time()
     phone_found = False
 
     batch_data = tf.constant(image_data)
@@ -40,11 +40,11 @@ def detect (frame,infer): #infer model instance
             phone_found = True
 
     pred_bbox = [boxes.numpy(), scores.numpy(), classes.numpy(), valid_detections.numpy()]
-    #image = draw_bbox(frame, pred_bbox)
-    fps = 1.0 / (time.time() - start_time)
-    print("FPS: %.2f" % fps)
-    result = np.asarray(image)
-    # cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
-    result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # image = draw_bbox(frame, pred_bbox)
+    #fps = 1.0 / (time.time() - start_time)
+    #print("FPS: %.2f" % fps)
+    # result = np.asarray(image)
+    # # cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
+    # result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    return result, phone_found
+    return phone_found

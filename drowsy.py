@@ -1,8 +1,8 @@
 import cv2
-
+from scipy.spatial import distance
 def drowsy_detect(ear,frame_counter):
 	threshold = 0.3
-	max_no_of_frames = 48
+	max_no_of_frames = 30
 	alarm = False
 	if ear < threshold:
 		frame_counter += 1
@@ -16,18 +16,11 @@ def drowsy_detect(ear,frame_counter):
 		alarm = False
 		return frame_counter,alarm
 
-	# if ear < threshold:
-	# 	frame_counter += 1
-	# 	print(frame_counter)
-	# 	if frame_counter >= max_no_of_frames:
-	# 		if not alarm:
-	# 			alarm = True
-	# 			t = Thread(target=sound_alarm, args=['alarm.mp3'])
-	# 			t.deamon = True
-	# 			t.start()
-	# 			print(frame_counter)
-	# 			#return frame_counter
-	# else:
-	# 	frame_counter = 0
-	# 	alarm = False
-	# 	#return frame_counter
+def eye_ascpect_ratio(points):
+    A = distance.euclidean(points[1], points[5])
+    B = distance.euclidean(points[2], points[4])
+    C = distance.euclidean(points[0], points[3])
+
+    EAR = (A+B)/(2*C)
+
+    return EAR

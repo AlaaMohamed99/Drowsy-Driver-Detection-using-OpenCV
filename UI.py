@@ -5,6 +5,9 @@ import cv2 as cv
 import PyQt5.QtWidgets as qwd
 from PyQt5 import QtGui as gui
 import datetime
+from imutils.video import VideoStream
+import imutils
+import cv2
 
 # fileName=""
 videoPath = ""
@@ -96,7 +99,7 @@ class firstGui(qwd.QDialog):
     def startScript(self):
         # put here the python file that will execute all stuff
         os.system("python main.py")
-
+        
     def BtnCloseSystem(self):
         sys.exit()
 
