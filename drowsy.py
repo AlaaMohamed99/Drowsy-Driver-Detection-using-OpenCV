@@ -2,7 +2,7 @@ import cv2
 from scipy.spatial import distance
 def drowsy_detect(ear,frame_counter):
 	threshold = 0.3
-	max_no_of_frames = 30
+	max_no_of_frames = 45
 	alarm = False
 	if ear < threshold:
 		frame_counter += 1
