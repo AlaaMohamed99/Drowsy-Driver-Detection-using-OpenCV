@@ -17,7 +17,7 @@ def HeadPoseAngles(marks,image,frame_counter_head):
         
         rmat, jac = cv2.Rodrigues(rotationVector) #must change from vector to matrix
         angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
-        max_no_of_frames = 35 #num of frames to detect if the driver looked away to turn alarm on
+        max_no_of_frames = 48 #num of frames to detect if the driver looked away to turn alarm on
         alarm = False
   
         if angles[1] < -10: #looking left
